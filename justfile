@@ -12,6 +12,10 @@ headless:
 phone:
     python3 -m pytest test_droppin_validation.py -v -k "phone"
 
+# Bug 7 only – email frontend bypass
+email:
+    python3 -m pytest test_droppin_validation.py -v -k "email"
+
 
 # Stop on first failure
 fail-fast:
