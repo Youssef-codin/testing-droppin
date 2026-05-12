@@ -23,10 +23,30 @@ def register_url():
 
 @pytest.fixture(scope="function")
 def driver(request):
+    import os
+    from datetime import datetime
+    
     opts = Options()
     if request.config.getoption("--headless"):
         opts.add_argument("--headless")
     browser = webdriver.Firefox(options=opts)
     browser.implicitly_wait(3)
+    
     yield browser
+    
+    # Take screenshot of the result
+    if not os.path.exists("images"):
+        os.makedirs("images")
+    
+    test_name = request.node.name.replace("[", "_").replace("]", "_")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    screenshot_name = f"{test_name}_{timestamp}.png"
+    screenshot_path = os.path.join("images", screenshot_name)
+    
+    try:
+        browser.save_screenshot(screenshot_path)
+        print(f"\n[Screenshot] Saved result to: {screenshot_path}")
+    except Exception as e:
+        print(f"\n[Screenshot] Failed to save screenshot: {e}")
+
     browser.quit()
