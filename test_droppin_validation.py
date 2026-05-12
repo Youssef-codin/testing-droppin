@@ -8,25 +8,15 @@ Run:
     pytest test_droppin_validation.py -v -s
 """
 
-import time
 import pytest
+from conftest import wait_for_page, url_changed
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait, Select
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
-
-WAIT = 15
+from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
 
 
 # ── helpers ───────────────────────────────────────────────────────────────────
-
-def wait_for_page(driver, timeout=WAIT):
-    WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "input"))
-    )
-
 
 def fill(driver, placeholder, value):
     field = driver.find_element(By.CSS_SELECTOR, f"input[placeholder='{placeholder}']")
@@ -63,18 +53,9 @@ def fill_valid_form(driver):
     fill(driver, "Create a password",    "TestPass123!")
     fill(driver, "Confirm your password","TestPass123!")
 
-    # Vehicle Type dropdown — pick the first real option
     dropdown = Select(driver.find_element(By.CSS_SELECTOR, "select"))
     if len(dropdown.options) > 1:
         dropdown.select_by_index(1)
-
-
-def url_changed(driver, before_url, timeout=6):
-    try:
-        WebDriverWait(driver, timeout).until(EC.url_changes(before_url))
-        return True
-    except TimeoutException:
-        return False
 
 
 # ── Bug 4: Phone Number Field Accepts Invalid Inputs ──────────────────────────

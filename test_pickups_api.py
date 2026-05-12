@@ -58,21 +58,6 @@ def admin_headers():
     return _login("admin")
 
 
-# ── resource ID fixtures ──────────────────────────────────────────────────────
-
-@pytest.fixture(scope="session")
-def pickup_id(request):
-    return request.config.getoption("--pickup-id")
-
-
-@pytest.fixture(scope="session")
-def driver_id(request):
-    return request.config.getoption("--driver-id")
-
-
-@pytest.fixture(scope="session")
-def package_id(request):
-    return request.config.getoption("--package-id")
 
 
 # ── BUG-05: No duplicate prevention on pickup scheduling ──────────────────────
